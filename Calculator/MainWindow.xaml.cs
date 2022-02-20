@@ -26,5 +26,22 @@ namespace Calculator
 
             resultLabel.Content = "0";
         }
+
+        private void sevenButton_Click(object sender, RoutedEventArgs e)
+        {
+            assignValue(Convert.ToInt16(sevenButton.Content));
+        }
+
+        private void assignValue(int num)
+        {
+            if (resultLabel.Content.ToString() == "0")
+            {
+                resultLabel.Content = num;
+            }
+            else
+            {
+                resultLabel.Content = $"{resultLabel.Content}" + num;
+            }
+        }
     }
 }
