@@ -20,28 +20,68 @@ namespace Calculator
     /// </summary>
     public partial class MainWindow : Window
     {
+        double lastNumber, result;
         public MainWindow()
         {
             InitializeComponent();
 
             resultLabel.Content = "0";
+
+            acButton.Click += AcButton_Click;
+            negButton.Click += NegButton_Click;
+            percentButton.Click += PercentButton_Click;
+            equalButton.Click += EqualButton_Click;
         }
 
-        private void sevenButton_Click(object sender, RoutedEventArgs e)
+        private void EqualButton_Click(object sender, RoutedEventArgs e)
         {
-            assignValue(Convert.ToInt16(sevenButton.Content));
+            throw new NotImplementedException();
         }
 
-        private void assignValue(int num)
+        private void PercentButton_Click(object sender, RoutedEventArgs e)
         {
+            if (double.TryParse(resultLabel.Content.ToString(), out lastNumber))
+            {
+                lastNumber /= 100;
+                resultLabel.Content = lastNumber.ToString();
+            }
+        }
+
+        private void NegButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (double.TryParse(resultLabel.Content.ToString(), out lastNumber))
+            {
+                lastNumber *= -1;
+                resultLabel.Content = lastNumber.ToString();
+            }
+        }
+
+        private void AcButton_Click(object sender, RoutedEventArgs e)
+        {
+            resultLabel.Content = "0";
+        }
+
+        private void OperationButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (double.TryParse(resultLabel.Content.ToString(), out lastNumber))
+            {
+                resultLabel.Content = "0";
+            }
+        }
+
+        private void NumberButton_Click(object sender, RoutedEventArgs e)
+        {
+            int selectedValue = int.Parse((sender as Button).Content.ToString());
+
             if (resultLabel.Content.ToString() == "0")
             {
-                resultLabel.Content = num;
+                resultLabel.Content = $"{selectedValue}";
             }
             else
             {
-                resultLabel.Content = $"{resultLabel.Content}" + num;
+                resultLabel.Content = $"{resultLabel.Content}{selectedValue}";
             }
         }
+
     }
 }
