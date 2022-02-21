@@ -21,6 +21,8 @@ namespace Calculator
     public partial class MainWindow : Window
     {
         double lastNumber, result;
+        SelectedOperator selectedOperator;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -31,19 +33,55 @@ namespace Calculator
             negButton.Click += NegButton_Click;
             percentButton.Click += PercentButton_Click;
             equalButton.Click += EqualButton_Click;
+            pointButton.Click += PointButton_Click;
+        }
+
+        private void PointButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!resultLabel.Content.ToString().Contains("."))
+            {
+                resultLabel.Content = $"{resultLabel.Content}.";
+            }
+
         }
 
         private void EqualButton_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            double newNumber;
+
+            if (double.TryParse(resultLabel.Content.ToString(), out newNumber))
+            {
+                switch (selectedOperator)
+                {
+                    case SelectedOperator.Addition:
+                        result = SimpleMath.Add(lastNumber, newNumber);
+                        break;
+                    case SelectedOperator.Subtraction:
+                        result = SimpleMath.Subtraction(lastNumber, newNumber);
+                        break;
+                    case SelectedOperator.Multiplication:
+                        result = SimpleMath.Multiply(lastNumber, newNumber);
+                        break;
+                    case SelectedOperator.Division:
+                        result = SimpleMath.Divide(lastNumber, newNumber);
+                        break;
+                }
+
+                resultLabel.Content = result.ToString();
+            }
         }
 
         private void PercentButton_Click(object sender, RoutedEventArgs e)
         {
-            if (double.TryParse(resultLabel.Content.ToString(), out lastNumber))
+
+            if (double.TryParse(resultLabel.Content.ToString(), out double tempNumber))
             {
-                lastNumber /= 100;
-                resultLabel.Content = lastNumber.ToString();
+                tempNumber /= 100;
+
+                if (lastNumber != 0)
+                    tempNumber *= lastNumber;
+
+                resultLabel.Content = tempNumber.ToString();
             }
         }
 
@@ -59,6 +97,8 @@ namespace Calculator
         private void AcButton_Click(object sender, RoutedEventArgs e)
         {
             resultLabel.Content = "0";
+            result = 0;
+            lastNumber = 0;
         }
 
         private void OperationButton_Click(object sender, RoutedEventArgs e)
@@ -67,6 +107,15 @@ namespace Calculator
             {
                 resultLabel.Content = "0";
             }
+
+            if (sender == multiplyButton)
+                selectedOperator = SelectedOperator.Multiplication;
+            if (sender == divisionButton)
+                selectedOperator = SelectedOperator.Division;
+            if (sender == plusButton)
+                selectedOperator = SelectedOperator.Addition;
+            if (sender == minusButton)
+                selectedOperator = SelectedOperator.Subtraction;
         }
 
         private void NumberButton_Click(object sender, RoutedEventArgs e)
@@ -83,5 +132,41 @@ namespace Calculator
             }
         }
 
+        public enum SelectedOperator
+        {
+            Addition,
+            Subtraction,
+            Multiplication,
+            Division
+        }
+
+        public class SimpleMath
+        {
+            public static double Add(double n1, double n2)
+            {
+                return n1 + n2;
+            }
+
+            public static double Subtraction(double n1, double n2)
+            {
+                return n1 - n2;
+            }
+
+            public static double Multiply(double n1, double n2)
+            {
+                return n1 * n2;
+            }
+
+            public static double Divide(double n1, double n2)
+            {
+                if (n2 == 0)
+                {
+                    MessageBox.Show("Division by zero is not supported.", "Wrong operation", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return 0;
+                }
+
+                return n1 / n2;
+            }
+        }
     }
 }

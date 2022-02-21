@@ -126,7 +126,7 @@
                 Grid.Row="5"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"/>
-        <Button x:Name="dotButton"
+        <Button x:Name="pointButton"
                 Content="."
                 Margin="5"
                 Grid.Column="2"
